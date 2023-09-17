@@ -1,18 +1,26 @@
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import flatpickr from "flatpickr";
-import "flatpickr/dist/flatpickr.min.css";
-import convertMs from './dateConvert';
-let getRef = selector => document.querySelector(selector);
-const imputDatePickerRef = getRef('#datetime-picker');
-const btnStartRef = getRef('[data-start]');
-const daysRef = getRef('[data-days]');
-const hoursRef = getRef('[data-hours]');
-const minutesRef = getRef('[data-minutes]');
-const secondsRef = getRef('[data-seconds]');
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
+import { Report } from 'notiflix/build/notiflix-report-aio';
 
-let timeDifference = 0;
-let timerId = null;
-let formatDate = null;
+document.body.style.backgroundColor = '#ece5da';
+const TIMER_DELAY = 1000;
+let intervalId = null;
+let selectedDate = null;
+let currentDate = null;
+
+const refs = {
+  dateInput: document.querySelector('input#datetime-picker'),
+  btnStartTimer: document.querySelector('button[data-start-timer]'),
+  daysRemaining: document.querySelector('[data-days]'),
+  hoursRemaining: document.querySelector('[data-hours]'),
+  minutesRemaining: document.querySelector('[data-minutes]'),
+  secondsRemaining: document.querySelector('[data-seconds]'),
+};
+
+refs.btnStartTimer.disabled = true;
+refs.btnStartTimer.addEventListener('click', timerStart);
+
+let remainingTime = 0;
 
 const options = {
   enableTime: true,
@@ -20,68 +28,84 @@ const options = {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    console.log(selectedDates[0]);
-    currentDifferenceDate(selectedDates[0]);
+    onDateCheck(selectedDates);
   },
 };
 
-btnStartRef.setAttribute('disabled', true);
+flatpickr(refs.dateInput, options);
 
-flatpickr(imputDatePickerRef, options);
+Report.info(
+  '👋 Greeting, my Friend!',
+  'Please, choose a date and click on start',
+  'Okay'
+);
 
-btnStartRef.addEventListener('click', onBtnStart);
+function onDateCheck(selectedDates) {
+  selectedDate = selectedDates[0].getTime();
+  currentDate = new Date().getTime();
 
-window.addEventListener('keydown', e => {
-  if (e.code === 'Escape' && timerId) {
-    clearInterval(timerId);
-
-    imputDatePickerRef.removeAttribute('disabled');
-    btnStartRef.setAttribute('disabled', true);
-
-    secondsRef.textContent = '00';
-    minutesRef.textContent = '00';
-    hoursRef.textContent = '00';
-    daysRef.textContent = '00';
+  if (selectedDate > currentDate) {
+    refs.btnStartTimer.disabled = false;
+    Report.success(
+      '🥰 Congratulation! Click on start!',
+      '"Do not try to become a person of success but try to become a person of value." <br/><br/>- Albert Einstein',
+      'Okay'
+    );
+    return;
   }
-});
-
-function onBtnStart() {
-  timerId = setInterval(startTimer, 1000);
+  Report.failure(
+    '🥺 Ooops...',
+    'Please, choose a date in the future and remember: "Knowledge rests not upon truth alone, but upon error also." - Carl Gustav Jung',
+    'Okay'
+  );
 }
 
-function currentDifferenceDate(selectedDates) {
-  const currentDate = Date.now();
-
-  if (selectedDates < currentDate) {
-    btnStartRef.setAttribute('disabled', true);
-    return Notify.failure('Please choose a date in the future');
-  }
-
-  timeDifference = selectedDates.getTime() - currentDate;
-  formatDate = convertMs(timeDifference);
-
-  renderDate(formatDate);
-  btnStartRef.removeAttribute('disabled');
+function timerStart() {
+  intervalId = setInterval(() => {
+    currentDate = new Date().getTime();
+    if (selectedDate - currentDate <= 1000) {
+      clearInterval(intervalId);
+      refs.btnStartTimer.disabled = true;
+      refs.dateInput.disabled = false;
+      Report.info(
+        '👏 Congratulation! Timer stopped!',
+        'Please, if you want to start timer, choose a date and click on start or reload this page',
+        'Okay'
+      );
+      return;
+    } else {
+      refs.btnStartTimer.disabled = true;
+      refs.dateInput.disabled = true;
+      currentDate += 1000;
+      remainingTime = Math.floor(selectedDate - currentDate);
+      convertMs(remainingTime);
+    }
+  }, TIMER_DELAY);
 }
 
-function startTimer() {
-  btnStartRef.setAttribute('disabled', true);
-  imputDatePickerRef.setAttribute('disabled', true);
-
-  timeDifference -= 1000;
-
-  if (secondsRef.textContent <= 0 && minutesRef.textContent <= 0) {
-    Notify.success('Time end');
-    clearInterval(timerId);
-  } else {
-    formatDate = convertMs(timeDifference);
-    renderDate(formatDate);
-  }
+function createMarkup({ days, hours, minutes, seconds }) {
+  refs.daysRemaining.textContent = days;
+  refs.hoursRemaining.textContent = hours;
+  refs.minutesRemaining.textContent = minutes;
+  refs.secondsRemaining.textContent = seconds;
 }
 
-function renderDate(formatDate) {
-  secondsRef.textContent = formatDate.seconds;
-  minutesRef.textContent = formatDate.minutes;
-  hoursRef.textContent = formatDate.hours;
-  daysRef.textContent = formatDate.days;
+function addLeadingZero(value) {
+  return String(value).padStart(2, '0');
+}
+
+function convertMs(ms) {
+  const second = 1000;
+  const minute = second * 60;
+  const hour = minute * 60;
+  const day = hour * 24;
+
+  const days = addLeadingZero(Math.floor(ms / day));
+  const hours = addLeadingZero(Math.floor((ms % day) / hour));
+  const minutes = addLeadingZero(Math.floor(((ms % day) % hour) / minute));
+  const seconds = addLeadingZero(
+    Math.floor((((ms % day) % hour) % minute) / second)
+  );
+  createMarkup({ days, hours, minutes, seconds });
+  return { days, hours, minutes, seconds };
 }
