@@ -1,9 +1,7 @@
-import flatpickr from 'flatpickr';
-import convertMs from './dateConvert';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-
-import 'flatpickr/dist/flatpickr.min.css';
-
+import flatpickr from "flatpickr";
+import "flatpickr/dist/flatpickr.min.css";
+import convertMs from './dateConvert';
 let getRef = selector => document.querySelector(selector);
 const imputDatePickerRef = getRef('#datetime-picker');
 const btnStartRef = getRef('[data-start]');
