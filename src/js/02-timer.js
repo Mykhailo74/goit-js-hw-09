@@ -18,7 +18,7 @@ const refs = {
 };
 
 // refs.btnStartTimer.disabled = true;
-refs.btnStartTimer.addEventListener('click', timerStart);
+// refs.btnStartTimer.addEventListener('click', timerStart);
 
 let remainingTime = 0;
 
