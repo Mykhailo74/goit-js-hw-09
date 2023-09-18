@@ -17,7 +17,7 @@ const refs = {
   secondsRemaining: document.querySelector('[data-seconds]'),
 };
 
-refs.btnStartTimer.disabled = true;
+// refs.btnStartTimer.disabled = true;
 refs.btnStartTimer.addEventListener('click', timerStart);
 
 let remainingTime = 0;
