@@ -34,30 +34,31 @@ const options = {
 
 flatpickr(refs.dateInput, options);
 
-Notiflix.Report.info(
-  '👋 Greeting, my Friend!',
-  'Please, choose a date and click on start',
-  'Okay'
-);
+// Notiflix.Report.info(
+//   '👋 Greeting, my Friend!',
+//   'Please, choose a date and click on start',
+//   'Okay'
+// );
 
 function onDateCheck(selectedDates) {
   selectedDate = selectedDates[0].getTime();
   currentDate = new Date().getTime();
 
-  if (selectedDate > currentDate) {
-    refs.btnStartTimer.disabled = false;
-    Notiflix.Report.success(
-      '🥰 Congratulation! Click on start!',
-      '"Do not try to become a person of success but try to become a person of value." <br/><br/>- Albert Einstein',
-      'Okay'
-    );
+  if (selectedDate <= currentDate) {
+    refs.btnStartTimer.disabled = true;
+    // Notiflix.Report.success(
+    //   '🥰 Congratulation! Click on start!',
+    //   '"Do not try to become a person of success but try to become a person of value." <br/><br/>- Albert Einstein',
+    //   'Okay'
+    // );
+    Notiflix.Notify.failure("Please choose a day in the future.");
     return;
   }
-  Notiflix.Report.failure(
-    '🥺 Ooops...',
-    'Please, choose a date in the future and remember: "Knowledge rests not upon truth alone, but upon error also." - Carl Gustav Jung',
-    'Okay'
-  );
+  // Notiflix.Report.failure(
+  //   '🥺 Ooops...',
+  //   'Please, choose a date in the future and remember: "Knowledge rests not upon truth alone, but upon error also." - Carl Gustav Jung',
+  //   'Okay'
+  // );
 }
 
 function timerStart() {
@@ -67,11 +68,13 @@ function timerStart() {
       clearInterval(intervalId);
       refs.btnStartTimer.disabled = true;
       refs.dateInput.disabled = false;
-      Notiflix.Report.info(
-        '👏 Congratulation! Timer stopped!',
-        'Please, if you want to start timer, choose a date and click on start or reload this page',
-        'Okay'
-      );
+      // Notiflix.Report.info(
+      //   '👏 Congratulation! Timer stopped!',
+      //   'Please, if you want to start timer, choose a date and click on start or reload this page',
+      //   'Okay'
+      // );
+      Notiflix.Notify.success("Countdown completed!");
+
       return;
     } else {
       refs.btnStartTimer.disabled = true;
