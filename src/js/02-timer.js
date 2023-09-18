@@ -52,8 +52,11 @@ function onDateCheck(selectedDates) {
     //   'Okay'
     // );
     Notiflix.Notify.failure("Please choose a day in the future.");
-    return;
-  }
+    // return;
+  } else {
+      refs.btnStartTimer.disabled = false;
+    }
+  
   // Notiflix.Report.failure(
   //   '🥺 Ooops...',
   //   'Please, choose a date in the future and remember: "Knowledge rests not upon truth alone, but upon error also." - Carl Gustav Jung',
