@@ -10,15 +10,15 @@ let currentDate = null;
 
 const refs = {
   dateInput: document.querySelector('input#datetime-picker'),
-  btnStartTimer: document.querySelector('button[data-start-timer]'),
+  btnStartTimer: document.querySelector('button[data-start]'),
   daysRemaining: document.querySelector('[data-days]'),
   hoursRemaining: document.querySelector('[data-hours]'),
   minutesRemaining: document.querySelector('[data-minutes]'),
   secondsRemaining: document.querySelector('[data-seconds]'),
 };
 
-// refs.btnStartTimer.disabled = true;
-// refs.btnStartTimer.addEventListener('click', timerStart);
+refs.btnStartTimer.disabled = true;
+refs.btnStartTimer.addEventListener('click', timerStart);
 
 let remainingTime = 0;
 
