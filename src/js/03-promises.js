@@ -1,26 +1,23 @@
-// import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import Notiflix from 'notiflix';
 
- // Функція для створення промісу зі затримкою
       function createPromise(position, delay) {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
             const result = { position, delay };
             const shouldResolve = Math.random() > 0.3;
             if (shouldResolve) {
-              resolve(result); // Виконувати проміс
+              resolve(result);
             } else {
-              reject(result); // Відхиляти проміс
+              reject(result); 
             }
           }, delay);
         });
       }
 
-      // Отримуємо посилання на форму
-      const form = document.getElementById("promiseForm");
+      const form = document.querySelector('.form');
 
-      // Обробник подачі форми
       form.addEventListener("submit", async (e) => {
-        e.preventDefault(); // Забороняємо стандартну подію форми
+        e.preventDefault(); 
 
         const delayInput = form.querySelector('input[name="delay"]');
         const stepInput = form.querySelector('input[name="step"]');
@@ -32,27 +29,17 @@
 
         const promises = [];
 
-        // Створюємо promises і додаємо їх до масиву
         for (let i = 0; i < amount; i++) {
           promises.push(createPromise(i, delay + i * step));
         }
 
-        // Очікуємо виконання всіх promises
-        for (const promise of promises) {
+              for (const promise of promises) {
           try {
             const result = await promise;
-            console.log(`✅ Fulfilled promise ${result.position} in ${result.delay}ms`);
+            Notiflix.Notify.success`✅ Fulfilled promise ${result.position} in ${result.delay}ms`;
           } catch (error) {
-            console.log(`❌ Rejected promise ${error.position} in ${error.delay}ms`);
+            Notiflix.Notify.failure`❌ Rejected promise ${error.position} in ${error.delay}ms`;
           }
         }
       });
 
-// function createPromise(position, delay) {
-//   const shouldResolve = Math.random() > 0.3;
-//   if (shouldResolve) {
-//     // Fulfill
-//   } else {
-//     // Reject
-//   }
-// }
