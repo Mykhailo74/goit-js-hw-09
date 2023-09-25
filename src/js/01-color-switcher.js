@@ -10,7 +10,7 @@ stopButton.addEventListener('click', stopChangingColor);
 function startChangingColor() {
   if (!intervalId) {
     startButton.disabled = true;
-    changeBackgroundColor(); // Викликати функцію без затримки
+    changeBackgroundColor(); 
     intervalId = setInterval(changeBackgroundColor, 1000);
   }
 }
