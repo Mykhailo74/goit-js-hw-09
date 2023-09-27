@@ -34,7 +34,7 @@ form.addEventListener("submit", async (e) => {
 
   const promises = [];
 
-  for (let i = 0; i < amount; i++) {
+  for (let i = 1; i < amount; i++) {
     promises.push(createPromise(i, delay + i * step));
   }
 

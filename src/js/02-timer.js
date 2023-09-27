@@ -29,7 +29,7 @@ function startTimer(targetDate) {
       clearInterval(timerInterval);
       toggleInputDisabled(false); 
       updateTimerDisplay({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-      alert('Time is up!');
+      Notiflix.Notify.failure('Time is up!');
       return;
     }
 
@@ -68,13 +68,14 @@ function toggleInputDisabled(disabled) {
 const flatpickrOptions = {
   enableTime: true,
   dateFormat: 'Y-m-d H:i',
+  defaultDate: new Date(), 
   onClose: function (selectedDates) {
     if (selectedDates.length > 0) {
       const selectedDate = selectedDates[0];
       const currentDate = new Date();
       
       if (selectedDate <= currentDate) {
-        alert('Please choose a date in the future');
+        Notiflix.Notify.failure('Please choose a date in the future');
         startButton.disabled = true;
       } else {
         startButton.disabled = false;
