@@ -67,8 +67,9 @@ function toggleInputDisabled(disabled) {
 
 const flatpickrOptions = {
   enableTime: true,
-  dateFormat: 'Y-m-d H:i',
-  defaultDate: new Date(), 
+  time_24hr: true,
+  defaultDate: new Date(),
+  minuteIncrement: 1,
   onClose: function (selectedDates) {
     if (selectedDates.length > 0) {
       const selectedDate = selectedDates[0];

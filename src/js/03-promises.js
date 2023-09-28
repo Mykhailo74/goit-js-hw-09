@@ -17,7 +17,7 @@ function createPromise(position, delay) {
 const form = document.querySelector('.form');
 
 form.addEventListener("submit", async (e) => {
-  e.preventDefault(); 
+  e.preventDefault();
 
   const delayInput = form.querySelector('input[name="delay"]');
   const stepInput = form.querySelector('input[name="step"]');
@@ -29,21 +29,41 @@ form.addEventListener("submit", async (e) => {
 
   if (step < 0 || delay < 0 || amount <= 0) {
     Notiflix.Notify.failure('❌ Please enter valid values for step, delay, and amount.');
-    return; 
+    return;
   }
 
-  const promises = [];
-
-  for (let i = 1; i < amount; i++) {
-    promises.push(createPromise(i, delay + i * step));
-  }
-
-  for (const promise of promises) {
-    try {
-      const result = await promise;
-      Notiflix.Notify.success(`✅ Fulfilled promise ${result.position} in ${result.delay}ms`);
-    } catch (error) {
-      Notiflix.Notify.failure(`❌ Rejected promise ${error.position} in ${error.delay}ms`);
-    }
+  for (let i = 1; i <= amount; i++) {
+    createPromise(i, delay)
+      .then(({ position, delay }) => {
+        Notiflix.Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
+      })
+      .catch(({ position, delay }) => {
+        Notiflix.Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
+      });
+    delay += step;
   }
 });
+
+
+  // const promises = [];
+
+  // for (let i = 1; i < amount; i++) {
+  //   promises.push(createPromise(i, delay + i * step));
+  // }
+
+
+
+//    for (let i = 1; i <= amount; i++) {
+//     promises.push(createPromise(i, delay));
+//     delay += step;
+//   }
+
+//   for (const promise of promises) {
+//     try {
+//       const result = await promise;
+//       Notiflix.Notify.success(`✅ Fulfilled promise ${result.position} in ${result.delay}ms`);
+//     } catch (error) {
+//       Notiflix.Notify.failure(`❌ Rejected promise ${error.position} in ${error.delay}ms`);
+//     }
+//   }
+// });
